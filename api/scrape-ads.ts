@@ -8,7 +8,9 @@ import puppeteer from 'puppeteer'
 export default async (req: VercelRequest, res: VercelResponse) => {
   console.time('scrape-ads')
   // const supabase = initializeSupabase()
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: ['-no-sandbox']
+  });
   const page = await browser.newPage();
 
   const baseURL = 'https://p2p.binance.com/es/trade/'
@@ -17,6 +19,14 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   await page.goto(baseURL + tradeURL, {
     waitUntil: 'networkidle0'
   });
+
+  /** CLOSE MODAL */
+  try {
+    const modal$ = '.css-vp41bv .css-1pcqseb';
+    await (await page.$(modal$))?.click()
+  } catch(err) {
+    console.error("An error occurred trying to close the modal or didn't exist")
+  }
   
   const screenshot = await page.screenshot({
     fullPage: true,
