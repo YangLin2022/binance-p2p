@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import puppeteer from 'puppeteer'
-// import chromium from 'chrome-aws-lambda'
+// import puppeteer from 'puppeteer'
+import chromium from 'chrome-aws-lambda'
 
 // import { initializeSupabase } from './supabase'
 
@@ -8,7 +8,7 @@ import puppeteer from 'puppeteer'
 export default async (req: VercelRequest, res: VercelResponse) => {
   console.time('scrape-ads')
   // const supabase = initializeSupabase()
-  const browser = await puppeteer.launch({
+  const browser = await chromium.puppeteer.launch({
     args: ['-no-sandbox']
   });
   const page = await browser.newPage();
